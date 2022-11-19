@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+  web:
+    image: webdevops/php-apache:alpine-php7
+    restart: always
+    container_name: web-app
+    ports:
+      - "80:80"
+    volumes:
+      - /projeto/php/:/app
+    networks:
+      - projeto-dio
+
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: db-app
+    command: --init-file /projeto/criarbanco.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: "Senha123"
+      MYSQL_DATABASE: "projetodio"
+    ports:
+      - "3306:3306"
+    volumes:
+      - /projeto/mysql:/var/lib/mysql
+      - ./criarbanco.sql:/projeto/criarbanco.sql
+    networks:
+      - projeto-dio
+
+networks:
+   projeto-dio:
+     driver: bridge
